@@ -10,7 +10,8 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-coupon/.idea
+coupon/.idea/
+coupon/.gitignore
 coupon/*/.gitignore
 coupon/*/target
 
