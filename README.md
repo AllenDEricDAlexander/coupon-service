@@ -1,2 +1,2 @@
-# littleyellowbook
-littleyellowbook
+# coupon-service
+coupon-service
