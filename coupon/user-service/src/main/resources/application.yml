@@ -9,16 +9,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/xdclass_user?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
-    password: MQa12345
+    password: password
   redis:
-    host: 120.24.55.18
+    host: ip
     password: 123456
     port: 6379
   #邮箱服务配置
   mail:
     host: smtp.163.com #发送邮件服务器
     username: mqa010225@163.com #发送邮件的邮箱地址
-    password: KCHJFWDQCYSZLKPL #客户端授权码，不是邮箱密码,网易的是自己设置的
+    password: secret #客户端授权码，不是邮箱密码,网易的是自己设置的
     from: mqa010225@163.com # 发送邮件的地址，和上面username一致
     properties:
       mail:
@@ -33,9 +33,9 @@ spring:
 aliyun:
   oss:
     endpoint: oss-cn-hangzhou.aliyuncs.com
-    access-key-id: LTAI5tAhVc4g3Dt6JCeuurYn
-    access-key-secret: uHQoFgIx32xyrCDevvxisj4Is2jM7H
-    bucket-name: at-luo-fu-store
+    access-key-id: id
+    access-key-secret: secret
+    bucket-name: bucket
 
 #配置plus打印sql日志
 mybatis-plus:
