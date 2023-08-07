@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @ClassName: CommonUtil
@@ -88,5 +89,9 @@ public class CommonUtil {
 
     public static long getCurrentTimestamp() {
         return System.currentTimeMillis();
+    }
+
+    public static String generateUUID() {
+        return UUID.randomUUID().toString();
     }
 }

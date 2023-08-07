@@ -30,6 +30,13 @@ spring:
             enable: true
     default-encoding: utf-8
 
+aliyun:
+  oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    access-key-id: yourkeyid
+    access-key-secret: yoursecret
+    bucket-name: your bucketname
+
 #配置plus打印sql日志
 mybatis-plus:
   configuration:
