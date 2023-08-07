@@ -16,6 +16,9 @@ import java.util.UUID;
  */
 public class CommonUtil {
 
+    private static final ThreadLocal<Random> randomThreadLocal = ThreadLocal.withInitial(Random::new);
+    private static final String ALL_CHAR_NUM = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
 
     /**
      * 获取ip
@@ -78,7 +81,7 @@ public class CommonUtil {
 
     public static String getRandomCode(int length){
         String source = "0123456789";
-        Random random = new Random();
+        Random random = randomThreadLocal.get();
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < length; i++) {
@@ -94,4 +97,16 @@ public class CommonUtil {
     public static String generateUUID() {
         return UUID.randomUUID().toString();
     }
+
+    public static String getStringNumRandom(int length) {
+        //生成随机数字和字母,
+        Random random = randomThreadLocal.get();
+        StringBuilder saltString = new StringBuilder(length);
+        for (int i = 1; i <= length; ++i) {
+            saltString.append(ALL_CHAR_NUM.charAt(random.nextInt(ALL_CHAR_NUM.length())));
+        }
+        return saltString.toString();
+    }
+
+
 }

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,9 +55,13 @@ public class NotifyController {
     @GetMapping("captcha")
     @ApiOperation("get captcha code")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response){
+        String cacheKey = getCaptchaKey(request);
+        if(redisTemplate.opsForValue().get(cacheKey) != null){
+            return;
+        }
         String text = captchaProducer.createText();
         log.info("验证码：" + text);
-        String cacheKey = getCaptchaKey(request);
+
         redisTemplate.opsForValue().set(cacheKey,text,CAPTCHA_CODE_EXPIRED, TimeUnit.MILLISECONDS);
         BufferedImage image = captchaProducer.createImage(text);
         ServletOutputStream bufferedImage = null;
@@ -84,7 +89,7 @@ public class NotifyController {
         }
     }
 
-    private String getCaptchaKey(HttpServletRequest request){
+    private   String getCaptchaKey(HttpServletRequest request){
         String ip = CommonUtil.getIpAddr(request);
         String header = request.getHeader("User-Agent");
         return "user-service:captcha:" + CommonUtil.MD5(ip + header);
@@ -102,7 +107,7 @@ public class NotifyController {
                                      HttpServletRequest request){
 
         String key = getCaptchaKey(request);
-        String cacheCaptcha = redisTemplate.opsForValue().get(key);
+        String cacheCaptcha = redisTemplate.opsForValue().get(key).toString();
 
         if(captcha!=null && cacheCaptcha!=null && cacheCaptcha.equalsIgnoreCase(captcha)) {
             redisTemplate.delete(key);

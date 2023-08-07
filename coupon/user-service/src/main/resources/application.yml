@@ -33,9 +33,9 @@ spring:
 aliyun:
   oss:
     endpoint: oss-cn-hangzhou.aliyuncs.com
-    access-key-id: yourkeyid
-    access-key-secret: yoursecret
-    bucket-name: your bucketname
+    access-key-id: LTAI5tAhVc4g3Dt6JCeuurYn
+    access-key-secret: uHQoFgIx32xyrCDevvxisj4Is2jM7H
+    bucket-name: at-luo-fu-store
 
 #配置plus打印sql日志
 mybatis-plus:
