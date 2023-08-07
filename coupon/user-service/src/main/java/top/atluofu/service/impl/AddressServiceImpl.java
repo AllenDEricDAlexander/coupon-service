@@ -19,8 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddressServiceImpl extends ServiceImpl<AddressMapper, AddressDO> implements AddressService {
 
-    @Autowired
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
+
+    public AddressServiceImpl(AddressMapper addressMapper) {
+        this.addressMapper = addressMapper;
+    }
 
     @Override
     public AddressDO detail(long id) {

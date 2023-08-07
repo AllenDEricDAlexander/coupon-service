@@ -109,6 +109,13 @@
                 <version>${springfox.boot.starter.version}</version>
             </dependency>
 
+            <!--kaptcha依赖包-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>kaptcha-spring-boot-starter</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
 
 
         </dependencies>
