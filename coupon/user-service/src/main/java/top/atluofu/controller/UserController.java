@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.atluofu.component.FileService;
 import top.atluofu.enums.BizCodeEnum;
+import top.atluofu.req.UserLoginRequest;
 import top.atluofu.req.UserRegisterRequest;
 import top.atluofu.service.UserService;
 import top.atluofu.utils.JsonData;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -56,6 +59,24 @@ public class UserController {
     public JsonData register(@ApiParam(value = "user register object")@RequestBody UserRegisterRequest userRegisterRequest){
         return userService.register(userRegisterRequest);
     }
+
+    /**
+     * 登录
+     * @return  JsonData vJsonData
+     */
+    @PostMapping("login")
+    @ApiOperation("user login")
+    public JsonData login(@ApiParam(value = "user login object")@RequestBody UserLoginRequest loginRequest){
+        return userService.login(loginRequest);
+    }
+
+    @PostMapping("refresh token")
+    @ApiOperation("refresh token")
+    public JsonData refreshToken(Map<String,Object> s){
+        // todo 去redis找token 找到 解密，调用jwt生成新的token 存储redis 返回前端
+        return null;
+    }
+
 
 }
 

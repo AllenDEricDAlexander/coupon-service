@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import top.atluofu.model.UserDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.atluofu.req.UserLoginRequest;
 import top.atluofu.req.UserRegisterRequest;
 import top.atluofu.utils.JsonData;
 
@@ -17,4 +18,6 @@ import top.atluofu.utils.JsonData;
  */
 public interface UserService extends IService<UserDO> {
     JsonData register(UserRegisterRequest userRegisterRequest);
+
+    JsonData login(UserLoginRequest loginRequest);
 }

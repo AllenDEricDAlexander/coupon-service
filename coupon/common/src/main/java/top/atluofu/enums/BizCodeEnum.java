@@ -27,7 +27,7 @@ public enum BizCodeEnum {
      */
     ACCOUNT_REPEAT(250001,"账号已经存在"),
     ACCOUNT_UNREGISTER(250002,"账号不存在"),
-    ACCOUNT_PWD_ERROR(250003,"账号或者密码错误"), SUCCESS(100000, "success");
+    ACCOUNT_PWD_ERROR(250003,"账号或者密码错误"), SUCCESS(100000, "success"),ACCOUNT_UNLOGN(2500004,"账号未登录");
 
     private  int code;
     private String msg;

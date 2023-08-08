@@ -1,6 +1,11 @@
 package top.atluofu.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -14,6 +19,7 @@ import java.util.UUID;
  * @datetime: 2023Year-08Month-07Day-15:38
  * @Version: 1.0
  */
+@Slf4j
 public class CommonUtil {
 
     private static final ThreadLocal<Random> randomThreadLocal = ThreadLocal.withInitial(Random::new);
@@ -22,6 +28,7 @@ public class CommonUtil {
 
     /**
      * 获取ip
+     *
      * @param request
      * @return
      */
@@ -56,14 +63,13 @@ public class CommonUtil {
                 }
             }
         } catch (Exception e) {
-            ipAddress="";
+            ipAddress = "";
         }
         return ipAddress;
     }
 
 
-
-    public static String MD5(String data)  {
+    public static String MD5(String data) {
         try {
             java.security.MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] array = md.digest(data.getBytes("UTF-8"));
@@ -79,7 +85,7 @@ public class CommonUtil {
 
     }
 
-    public static String getRandomCode(int length){
+    public static String getRandomCode(int length) {
         String source = "0123456789";
         Random random = randomThreadLocal.get();
         StringBuilder sb = new StringBuilder();
@@ -109,4 +115,14 @@ public class CommonUtil {
     }
 
 
+    public static void sendJsonMessage(HttpServletResponse response, Object obj) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.setContentType("application/json;charset=utf-8");
+        try (PrintWriter writer = response.getWriter()) {
+            writer.print(objectMapper.writeValueAsString(obj));
+            response.flushBuffer();
+        } catch (Exception e) {
+            log.warn("login err:{}",e);
+        }
+    }
 }
