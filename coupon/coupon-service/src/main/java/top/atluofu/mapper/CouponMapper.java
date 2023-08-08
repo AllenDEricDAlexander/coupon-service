@@ -1,6 +1,7 @@
 package top.atluofu.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import top.atluofu.model.CouponDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -15,5 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @Mapper
 public interface CouponMapper extends BaseMapper<CouponDO> {
 
-    int reduceStock(long couponId, Integer stock);
+    int reduceStock(@Param("couponId") long couponId, Integer stock);
 }

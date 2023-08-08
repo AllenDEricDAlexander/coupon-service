@@ -80,7 +80,7 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> imple
         couponRecordDO.setCouponId(couponId);
         couponRecordDO.setId(null);
 
-        //高并发下扣减劵库存，采用乐观锁,当前stock做版本号,延伸多种防止超卖的问题,一次只能领取1张，TODO
+        // 高并发下扣减劵库存，采用乐观锁,当前stock做版本号,延伸多种防止超卖的问题,一次只能领取1张 TODO
         int rows = couponMapper.reduceStock(couponId, couponDO.getStock());
         if (rows == 1) {
             //库存扣减成功才保存
