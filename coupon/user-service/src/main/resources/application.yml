@@ -12,7 +12,7 @@ spring:
     password:
   redis:
     host:
-    password: 123456
+    password:
     port: 6379
   #邮箱服务配置
   mail:
