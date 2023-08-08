@@ -3,8 +3,15 @@ package top.atluofu.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import top.atluofu.enums.BizCodeEnum;
 import top.atluofu.enums.CouponCategoryEnum;
 import top.atluofu.enums.CouponPublishEnum;
@@ -23,9 +30,12 @@ import top.atluofu.utils.CommonUtil;
 import top.atluofu.utils.JsonData;
 import top.atluofu.vo.CouponVO;
 
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -44,9 +54,15 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> imple
 
     private final CouponRecordMapper couponRecordMapper;
 
-    public CouponServiceImpl(CouponMapper couponMapper, CouponRecordMapper couponRecordMapper) {
+    private final RedisTemplate redisTemplate;
+
+    private final RedissonClient redissonClient;
+
+    public CouponServiceImpl(CouponMapper couponMapper, CouponRecordMapper couponRecordMapper, RedisTemplate redisTemplate, RedissonClient redissonClient) {
         this.couponMapper = couponMapper;
         this.couponRecordMapper = couponRecordMapper;
+        this.redisTemplate = redisTemplate;
+        this.redissonClient = redissonClient;
     }
 
     @Override
@@ -64,30 +80,38 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> imple
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public JsonData addCoupon(long couponId, String couponCategory) {
         LoginUser loginUser = LoginInterceptor.threadLocal.get();
-        CouponDO couponDO = couponMapper.selectOne(new QueryWrapper<CouponDO>().eq("id", couponId)
-                .eq("category", couponCategory)
-                .eq("publish", CouponPublishEnum.PUBLISH));
-        this.couponCheck(couponDO, loginUser.getId());
+        String lockKey = "lock:coupon:" + couponId;
 
-        CouponRecordDO couponRecordDO = new CouponRecordDO();
-        BeanUtils.copyProperties(couponDO, couponRecordDO);
-        couponRecordDO.setCreateTime(new Date());
-        couponRecordDO.setUseState(CouponStateEnum.NEW.name());
-        couponRecordDO.setUserId(loginUser.getId());
-        couponRecordDO.setUserName(loginUser.getName());
-        couponRecordDO.setCouponId(couponId);
-        couponRecordDO.setId(null);
+        RLock lock = redissonClient.getLock(lockKey);
+        lock.lock();
+        try {
+            CouponDO couponDO = couponMapper.selectOne(new QueryWrapper<CouponDO>().eq("id", couponId)
+                    .eq("category", couponCategory)
+                    .eq("publish", CouponPublishEnum.PUBLISH));
+            this.couponCheck(couponDO, loginUser.getId());
 
-        // 高并发下扣减劵库存，采用乐观锁,当前stock做版本号,延伸多种防止超卖的问题,一次只能领取1张 TODO
-        int rows = couponMapper.reduceStock(couponId, couponDO.getStock());
-        if (rows == 1) {
-            //库存扣减成功才保存
-            couponRecordMapper.insert(couponRecordDO);
-        } else {
-            log.warn("发放优惠券失败:{},用户:{}", couponDO, loginUser);
-            throw new BizException(BizCodeEnum.COUPON_NO_STOCK);
+            CouponRecordDO couponRecordDO = new CouponRecordDO();
+            BeanUtils.copyProperties(couponDO, couponRecordDO);
+            couponRecordDO.setCreateTime(new Date());
+            couponRecordDO.setUseState(CouponStateEnum.NEW.name());
+            couponRecordDO.setUserId(loginUser.getId());
+            couponRecordDO.setUserName(loginUser.getName());
+            couponRecordDO.setCouponId(couponId);
+            couponRecordDO.setId(null);
+            // 高并发下扣减劵库存，采用乐观锁,当前stock做版本号,延伸多种防止超卖的问题,一次只能领取1张
+            int rows = couponMapper.reduceStock(couponId, couponDO.getStock());
+            if (rows == 1) {
+                //库存扣减成功才保存
+                couponRecordMapper.insert(couponRecordDO);
+            } else {
+                log.warn("发放优惠券失败:{},用户:{}", couponDO, loginUser);
+                throw new BizException(BizCodeEnum.COUPON_NO_STOCK);
+            }
+        } finally {
+            lock.unlock();
         }
         return JsonData.buildSuccess();
     }

@@ -2,6 +2,10 @@ package top.atluofu.service;
 
 import top.atluofu.model.CouponRecordDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.atluofu.vo.CouponVO;
+import top.atluofu.vo.RecordVO;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CouponRecordService extends IService<CouponRecordDO> {
 
+    Map<String,Object> page(int page,int size);
+
+    RecordVO findById(long recordId);
 }
