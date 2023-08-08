@@ -44,11 +44,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 String headImg = (String) claims.get("head_img");
                 String mail = (String) claims.get("mail");
                 String name = (String) claims.get("name");
-                LoginUser loginUser = new LoginUser();
-                loginUser.setId(id);
-                loginUser.setName(name);
-                loginUser.setMail(mail);
-                loginUser.setHeadImg(headImg);
+                LoginUser loginUser = LoginUser.builder().id(id).name(name).mail(mail).headImg(headImg).build();
                 threadLocal.set(loginUser);
                 return true;
             }

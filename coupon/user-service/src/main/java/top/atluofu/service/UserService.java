@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.atluofu.req.UserLoginRequest;
 import top.atluofu.req.UserRegisterRequest;
 import top.atluofu.utils.JsonData;
+import top.atluofu.vo.UserVO;
 
 /**
  * <p>
@@ -20,4 +21,6 @@ public interface UserService extends IService<UserDO> {
     JsonData register(UserRegisterRequest userRegisterRequest);
 
     JsonData login(UserLoginRequest loginRequest);
+
+    UserVO findUserDetail();
 }

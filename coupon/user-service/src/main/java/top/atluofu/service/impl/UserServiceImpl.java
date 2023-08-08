@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import top.atluofu.enums.BizCodeEnum;
 import top.atluofu.enums.SendCodeEnum;
+import top.atluofu.interceptor.LoginInterceptor;
 import top.atluofu.model.LoginUser;
 import top.atluofu.model.UserDO;
 import top.atluofu.mapper.UserMapper;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import top.atluofu.utils.CommonUtil;
 import top.atluofu.utils.JWTUtils;
 import top.atluofu.utils.JsonData;
+import top.atluofu.vo.UserVO;
 
 import java.util.Date;
 import java.util.List;
@@ -88,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             UserDO userDO = list.get(0);
             String cryptPwd = Md5Crypt.md5Crypt(loginRequest.getPwd().getBytes(), userDO.getSecret());
             if (cryptPwd.equals(userDO.getPwd())) {
-                LoginUser userDTO = new LoginUser();
+                LoginUser userDTO = LoginUser.builder().build();
                 BeanUtils.copyProperties(userDO, userDTO);
                 String token = JWTUtils.geneJsonWebToken(userDTO);
                 // todo access token refresh
@@ -102,6 +104,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             //未注册
             return JsonData.buildResult(BizCodeEnum.ACCOUNT_UNREGISTER);
         }
+    }
+
+    @Override
+    public UserVO findUserDetail() {
+        LoginUser loginUser = LoginInterceptor.threadLocal.get();
+        UserDO userDO = userMapper.selectOne(new QueryWrapper<UserDO>().eq("id", loginUser.getId()));
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userDO, userVO);
+        return userVO;
     }
 
     private boolean checkUnique(String mail) {

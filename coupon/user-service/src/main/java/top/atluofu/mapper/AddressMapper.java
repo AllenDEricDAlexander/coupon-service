@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author atluofu
  * @since 2023-08-06
  */
-
+@Mapper
 public interface AddressMapper extends BaseMapper<AddressDO> {
 
 }

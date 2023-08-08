@@ -1,23 +1,31 @@
-package top.atluofu.model;
+package top.atluofu.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
 
+
 /**
- * @ClassName: LoginUser
+ * @ClassName: UserVO
  * @description: TODO
  * @author: 有罗敷的马同学
- * @datetime: 2023Year-08Month-08Day-14:06
+ * @datetime: 2023Year-08Month-08Day-15:57
  * @Version: 1.0
  */
 @Data
-@Builder
-public class LoginUser {
-
+public class UserVO {
     private Long id;
+
     private String name;
-    private String mail;
+
     @JsonProperty("head_img")
     private String headImg;
+
+    private String slogan;
+
+    private Integer sex;
+
+    private Integer points;
+
+    private String mail;
+
 }

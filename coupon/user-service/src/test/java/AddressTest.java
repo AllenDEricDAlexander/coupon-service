@@ -7,6 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import top.atluofu.UserServiceApplication;
 import top.atluofu.model.AddressDO;
 import top.atluofu.service.AddressService;
+import top.atluofu.vo.AddressVO;
 
 /**
  * @ClassName: AddressTest
@@ -26,7 +27,7 @@ public class AddressTest {
 
     @Test
     public void testAddressDetail(){
-        AddressDO addressDO = addressService.detail(1L);
+        AddressVO addressDO = addressService.detail(1L);
         log.info(addressDO.toString());
     }
 
