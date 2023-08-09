@@ -9,4 +9,5 @@ package top.atluofu.constant;
  */
 public class CacheKey {
     public static final String CHECK_CODE_KEY = "code:%s:%s";
+    public static final String CART_KEY = "cart:%s";
 }

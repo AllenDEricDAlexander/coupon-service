@@ -2,6 +2,9 @@ package top.atluofu.service;
 
 import top.atluofu.model.BannerDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.atluofu.vo.BannerVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BannerService extends IService<BannerDO> {
 
+    List<BannerVO> getList();
 }

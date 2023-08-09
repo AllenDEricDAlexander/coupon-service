@@ -1,7 +1,6 @@
 package top.atluofu.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import top.atluofu.model.BannerDO;
+import top.atluofu.model.ProductOrderItemDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -12,7 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author atluofu
  * @since 2023-08-09
  */
-@Mapper
-public interface BannerMapper extends BaseMapper<BannerDO> {
+public interface ProductOrderItemMapper extends BaseMapper<ProductOrderItemDO> {
 
 }

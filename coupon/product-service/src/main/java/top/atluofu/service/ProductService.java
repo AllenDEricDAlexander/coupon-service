@@ -2,6 +2,10 @@ package top.atluofu.service;
 
 import top.atluofu.model.ProductDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.atluofu.vo.ProductVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +17,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProductService extends IService<ProductDO> {
 
+    Map<String, Object> pageCouponActivity(int page, int size);
+
+    ProductVO findDetailById(long productId);
+
+    List<ProductVO> findProductByIdBatch(List<Long> productIdList);
 }
