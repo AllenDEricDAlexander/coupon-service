@@ -23,6 +23,7 @@ import top.atluofu.model.CouponDO;
 import top.atluofu.mapper.CouponMapper;
 import top.atluofu.model.CouponRecordDO;
 import top.atluofu.model.LoginUser;
+import top.atluofu.req.NewUserCouponReq;
 import top.atluofu.service.CouponService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,7 @@ import top.atluofu.utils.JsonData;
 import top.atluofu.vo.CouponVO;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -113,6 +111,19 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> imple
         } finally {
             lock.unlock();
         }
+        return JsonData.buildSuccess();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public JsonData initNewUserCoupon(NewUserCouponReq newUserCouponReq) {
+        LoginUser loginUser = LoginUser.builder().build();
+        loginUser.setId(newUserCouponReq.getUserId());
+        loginUser.setName(newUserCouponReq.getName());
+        LoginInterceptor.threadLocal.set(loginUser);
+
+        List<CouponDO> category = couponMapper.selectList(new QueryWrapper<CouponDO>().eq("category", CouponCategoryEnum.NEW_USER.name()));
+        category.stream().forEach(obj -> this.addCoupon(obj.getId(), CouponCategoryEnum.NEW_USER.name()));
         return JsonData.buildSuccess();
     }
 

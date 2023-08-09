@@ -3,6 +3,7 @@ package top.atluofu.service;
 import top.atluofu.enums.CouponCategoryEnum;
 import top.atluofu.model.CouponDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.atluofu.req.NewUserCouponReq;
 import top.atluofu.utils.JsonData;
 
 import java.util.Map;
@@ -20,4 +21,6 @@ public interface CouponService extends IService<CouponDO> {
     Map<String, Object> pageCouponActivity(int page, int size);
 
     JsonData addCoupon(long couponId, String couponCategory);
+
+    JsonData initNewUserCoupon(NewUserCouponReq newUserCouponReq);
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import top.atluofu.enums.CouponCategoryEnum;
+import top.atluofu.req.NewUserCouponReq;
 import top.atluofu.service.CouponService;
 import top.atluofu.utils.JsonData;
 
@@ -41,10 +42,18 @@ public class CouponController {
     }
 
 
+    @ApiOperation("get coupon")
     @GetMapping("/add/promotion/{coupon_id}")
     public JsonData addPromotionCoupon(@ApiParam(value = "couponID", required = true) @PathVariable("coupon_id") long couponId) {
         JsonData jsonData = couponService.addCoupon(couponId, CouponCategoryEnum.PROMOTION.toString());
         return JsonData.buildSuccess();
+    }
+
+    @ApiOperation("rpc - new user register add coupon")
+    @PostMapping("new_user_coupon")
+    public JsonData addNewUserCoupon(@ApiParam("user obj") @RequestBody NewUserCouponReq newUserCouponReq) {
+        JsonData jsonData = couponService.initNewUserCoupon(newUserCouponReq);
+        return JsonData.buildSuccess(jsonData);
     }
 
 }
