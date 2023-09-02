@@ -121,7 +121,6 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> imple
         loginUser.setId(newUserCouponReq.getUserId());
         loginUser.setName(newUserCouponReq.getName());
         LoginInterceptor.threadLocal.set(loginUser);
-
         List<CouponDO> category = couponMapper.selectList(new QueryWrapper<CouponDO>().eq("category", CouponCategoryEnum.NEW_USER.name()));
         category.stream().forEach(obj -> this.addCoupon(obj.getId(), CouponCategoryEnum.NEW_USER.name()));
         return JsonData.buildSuccess();

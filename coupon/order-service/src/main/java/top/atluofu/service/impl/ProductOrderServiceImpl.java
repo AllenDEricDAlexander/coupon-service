@@ -1,10 +1,13 @@
 package top.atluofu.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import top.atluofu.model.ProductOrderDO;
 import top.atluofu.mapper.ProductOrderMapper;
+import top.atluofu.request.ConfirmOrderRequest;
 import top.atluofu.service.ProductOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import top.atluofu.utils.JsonData;
 
 /**
  * <p>
@@ -15,6 +18,11 @@ import org.springframework.stereotype.Service;
  * @since 2023-08-09
  */
 @Service
+@Slf4j
 public class ProductOrderServiceImpl extends ServiceImpl<ProductOrderMapper, ProductOrderDO> implements ProductOrderService {
 
+    @Override
+    public JsonData confirmOrder(ConfirmOrderRequest orderRequest) {
+        return null;
+    }
 }

@@ -2,6 +2,8 @@ package top.atluofu.service;
 
 import top.atluofu.model.ProductOrderDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.atluofu.request.ConfirmOrderRequest;
+import top.atluofu.utils.JsonData;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProductOrderService extends IService<ProductOrderDO> {
 
+    JsonData confirmOrder(ConfirmOrderRequest orderRequest);
 }
