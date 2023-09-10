@@ -1,6 +1,7 @@
 package top.atluofu.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import top.atluofu.model.ProductOrderDO;
 import top.atluofu.mapper.ProductOrderMapper;
 import top.atluofu.request.ConfirmOrderRequest;
@@ -19,6 +20,7 @@ import top.atluofu.utils.JsonData;
  */
 @Service
 @Slf4j
+@Primary
 public class ProductOrderServiceImpl extends ServiceImpl<ProductOrderMapper, ProductOrderDO> implements ProductOrderService {
 
     @Override

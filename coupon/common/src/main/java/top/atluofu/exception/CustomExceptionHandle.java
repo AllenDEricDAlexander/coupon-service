@@ -13,22 +13,22 @@ import top.atluofu.utils.JsonData;
  * @datetime: 2023Year-08Month-06Day-21:10
  * @Version: 1.0
  */
-@ControllerAdvice
-@Slf4j
-public class CustomExceptionHandle {
-    @ExceptionHandler(value = Exception.class)
-    @ResponseBody
-    public JsonData Handle(Exception e) {
-
-        if (e instanceof BizException) {
-            BizException bizException = (BizException) e;
-            log.info("[业务异常]{}", e);
-            return JsonData.buildError(bizException.getCode(),bizException.getMsg());
-
-        } else {
-            log.info("[系统异常]{}", e);
-            return JsonData.buildError(304,"全局异常，未知错误");
-        }
-
-    }
-}
+//@ControllerAdvice
+//@Slf4j
+//public class CustomExceptionHandle {
+//    @ExceptionHandler(value = Exception.class)
+//    @ResponseBody
+//    public JsonData Handle(Exception e) {
+//
+//        if (e instanceof BizException) {
+//            BizException bizException = (BizException) e;
+//            log.info("[业务异常]{}", e);
+//            return JsonData.buildError(bizException.getCode(),bizException.getMsg());
+//
+//        } else {
+//            log.info("[系统异常]{}", e);
+//            return JsonData.buildError(304,"全局异常，未知错误");
+//        }
+//
+//    }
+//}

@@ -33,8 +33,11 @@ import java.io.IOException;
 @RequestMapping("/api/order/v1")
 @Slf4j
 public class ProductOrderController {
-    @Autowired
-    private ProductOrderService orderService;
+    private final ProductOrderService orderService;
+
+    public ProductOrderController(ProductOrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @ApiOperation("提交订单")
     @PostMapping("confirm")
