@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @MapperScan("top.atluofu.mapper")
 @EnableFeignClients
-@EnableTransactionManagement
+//@EnableTransactionManagement
 @EnableDiscoveryClient
 public class UserServiceApplication {
     public static void main(String[] args) {

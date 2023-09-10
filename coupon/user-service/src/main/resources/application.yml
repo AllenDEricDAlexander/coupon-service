@@ -16,13 +16,13 @@ spring:
       discovery:
         server-addr: 120.24.55.18:8848
     #seata配置
-    seata:
-      tx-service-group: ${spring.application.name}-group
-      service:
-        grouplist:
-          xdclass: 127.0.0.1:8091
-        vgroup-mapping:
-          xdclass-user-service-group: xdclass
+#    seata:
+#      tx-service-group: ${spring.application.name}-group
+#      service:
+#        grouplist:
+#          xdclass: 127.0.0.1:8091
+#        vgroup-mapping:
+#          xdclass-user-service-group: xdclass
   redis:
     host:
     password: 123456

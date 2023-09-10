@@ -1,20 +1,22 @@
 package top.atluofu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import top.atluofu.enums.BizCodeEnum;
 import top.atluofu.enums.SendCodeEnum;
+import top.atluofu.fegin.CouponFeignService;
 import top.atluofu.interceptor.LoginInterceptor;
 import top.atluofu.model.LoginUser;
 import top.atluofu.model.UserDO;
 import top.atluofu.mapper.UserMapper;
+import top.atluofu.req.NewUserCouponRequest;
 import top.atluofu.req.UserLoginRequest;
 import top.atluofu.req.UserRegisterRequest;
 import top.atluofu.service.MailService;
@@ -47,6 +49,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     private final StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private CouponFeignService couponFeignService;
+
     public UserServiceImpl(MailService mailService, UserMapper userMapper, StringRedisTemplate redisTemplate) {
         this.mailService = mailService;
         this.userMapper = userMapper;
@@ -54,7 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    @GlobalTransactional
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public JsonData register(UserRegisterRequest userRegisterRequest) {
         boolean checkCode = false;
 
@@ -118,10 +123,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     private boolean checkUnique(String mail) {
-        return true;
+
+        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<UserDO>().eq("mail", mail);
+
+        List<UserDO> list = userMapper.selectList(queryWrapper);
+
+        return list.isEmpty();
+
     }
 
-    private void userRegisterInitTask(UserDO userDO) {
 
+    private void userRegisterInitTask(UserDO userDO) {
+        NewUserCouponRequest newUserCouponRequest = new NewUserCouponRequest();
+        newUserCouponRequest.setUserId(userDO.getId());
+        newUserCouponRequest.setName(userDO.getName());
+        JsonData jsonData = couponFeignService.addNewUserCoupon(newUserCouponRequest);
+//        if (jsonData.getCode() != 0) {
+//            throw new RuntimeException("coupon init error");
+//        }
+        log.info("coupon init result" + userDO.getName() + ":" + jsonData.getData());
     }
 }

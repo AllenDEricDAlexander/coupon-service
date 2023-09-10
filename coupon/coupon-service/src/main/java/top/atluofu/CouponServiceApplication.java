@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("top.atluofu.mapper")
 @EnableFeignClients
 @EnableDiscoveryClient
-@EnableTransactionManagement
+//@EnableTransactionManagement
 public class CouponServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(CouponServiceApplication.class, args);
