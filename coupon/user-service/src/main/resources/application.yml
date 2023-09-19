@@ -15,14 +15,24 @@ spring:
     nacos:
       discovery:
         server-addr: 120.24.55.18:8848
+  rabbitmq:
+    host:
+    port: 15672
+    virtual-host: /
+    password: password
+    username: admin
+    #开启手动确认消息
+    listener:
+      simple:
+        acknowledge-mode: manual
     #seata配置
-#    seata:
-#      tx-service-group: ${spring.application.name}-group
-#      service:
-#        grouplist:
-#          xdclass: 127.0.0.1:8091
-#        vgroup-mapping:
-#          xdclass-user-service-group: xdclass
+  #    seata:
+  #      tx-service-group: ${spring.application.name}-group
+  #      service:
+  #        grouplist:
+  #          xdclass: 127.0.0.1:8091
+  #        vgroup-mapping:
+  #          xdclass-user-service-group: xdclass
   redis:
     host:
     password: 123456
