@@ -14,6 +14,7 @@ import top.atluofu.interceptor.LoginInterceptor;
 import top.atluofu.mapper.CouponRecordMapper;
 import top.atluofu.model.CouponRecordDO;
 import top.atluofu.model.LoginUser;
+import top.atluofu.req.LockCouponRecordRequest;
 import top.atluofu.service.CouponRecordService;
 import top.atluofu.utils.JsonData;
 import top.atluofu.vo.CouponVO;
@@ -51,6 +52,17 @@ public class CouponRecordController {
     public JsonData findUserCouponRecordById(@PathVariable("record_id") long recordId) {
         RecordVO couponRecordVO = couponRecordService.findById(recordId);
         return couponRecordVO == null ? JsonData.buildResult(BizCodeEnum.COUPON_NO_EXITS) : JsonData.buildSuccess(couponRecordVO);
+    }
+
+    @ApiOperation("rpc-锁定，优惠券记录")
+    @PostMapping("lock_records")
+    public JsonData lockCouponRecords(@ApiParam("锁定优惠券请求对象") @RequestBody LockCouponRecordRequest recordRequest){
+
+
+        JsonData jsonData = couponRecordService.lockCouponRecords(recordRequest);
+
+        return jsonData;
+
     }
 
 

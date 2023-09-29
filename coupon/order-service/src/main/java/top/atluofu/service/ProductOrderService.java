@@ -16,4 +16,6 @@ import top.atluofu.utils.JsonData;
 public interface ProductOrderService extends IService<ProductOrderDO> {
 
     JsonData confirmOrder(ConfirmOrderRequest orderRequest);
+
+    String queryProductOrderState(String outTradeNo);
 }

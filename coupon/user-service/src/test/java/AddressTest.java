@@ -9,6 +9,8 @@ import top.atluofu.model.AddressDO;
 import top.atluofu.service.AddressService;
 import top.atluofu.vo.AddressVO;
 
+import java.util.ArrayList;
+
 /**
  * @ClassName: AddressTest
  * @description: TODO
@@ -26,7 +28,7 @@ public class AddressTest {
 
 
     @Test
-    public void testAddressDetail(){
+    public void testAddressDetail() {
         AddressVO addressDO = addressService.detail(1L);
         log.info(addressDO.toString());
     }

@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Mapper;
 import top.atluofu.model.CouponRecordDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -15,4 +17,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @Mapper
 public interface CouponRecordMapper extends BaseMapper<CouponRecordDO> {
 
+    int lockUseStateBatch(Long id, String name, List<Long> lockCouponRecordIds);
+
+    void updateState(Long couponRecordId, String name);
 }
