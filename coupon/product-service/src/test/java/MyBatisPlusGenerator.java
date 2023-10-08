@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
  * @Version: 1.0
  */
 public class MyBatisPlusGenerator {
-    public static void main(String[] args) {
+    public static void test(String[] args) {
 
         //1. 全局配置
         GlobalConfig config = new GlobalConfig();

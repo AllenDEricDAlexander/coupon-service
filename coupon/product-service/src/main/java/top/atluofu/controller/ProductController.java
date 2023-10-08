@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import top.atluofu.model.ProductDO;
+import top.atluofu.req.LockProductRequest;
 import top.atluofu.service.ProductService;
 import top.atluofu.utils.JsonData;
 import top.atluofu.vo.ProductVO;
@@ -48,6 +49,20 @@ public class ProductController {
     public JsonData detail(@ApiParam(value = "productId", required = true) @PathVariable("product_id") long productId) {
         ProductVO byId = productService.findDetailById(productId);
         return JsonData.buildSuccess(byId);
+    }
+
+    /**
+     * 商品库存锁定
+     * @return
+     */
+    @ApiOperation("商品库存锁定")
+    @PostMapping("lock_products")
+    public JsonData lockProducts(@ApiParam("商品库存锁定") @RequestBody LockProductRequest lockProductRequest){
+
+
+        JsonData jsonData = productService.lockProductStock(lockProductRequest);
+
+        return jsonData;
     }
 
 }

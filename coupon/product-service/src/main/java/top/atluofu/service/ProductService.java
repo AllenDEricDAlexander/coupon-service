@@ -2,6 +2,9 @@ package top.atluofu.service;
 
 import top.atluofu.model.ProductDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.atluofu.model.ProductMessage;
+import top.atluofu.req.LockProductRequest;
+import top.atluofu.utils.JsonData;
 import top.atluofu.vo.ProductVO;
 
 import java.util.List;
@@ -22,4 +25,8 @@ public interface ProductService extends IService<ProductDO> {
     ProductVO findDetailById(long productId);
 
     List<ProductVO> findProductByIdBatch(List<Long> productIdList);
+
+    JsonData lockProductStock(LockProductRequest lockProductRequest);
+
+    boolean releaseProductStock(ProductMessage productMessage);
 }
