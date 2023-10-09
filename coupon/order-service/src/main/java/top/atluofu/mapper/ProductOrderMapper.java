@@ -15,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @Mapper
 public interface ProductOrderMapper extends BaseMapper<ProductOrderDO> {
 
+    void updateOrderPayState(String outTradeNo, String name, String name1);
 }

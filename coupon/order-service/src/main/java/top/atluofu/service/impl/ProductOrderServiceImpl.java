@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import top.atluofu.config.RabbitMQConfig;
 import top.atluofu.enums.*;
 import top.atluofu.exception.BizException;
 import top.atluofu.feign.CouponFeignSerivce;
@@ -14,6 +17,7 @@ import top.atluofu.feign.UserFeignService;
 import top.atluofu.interceptor.LoginInterceptor;
 import top.atluofu.mapper.ProductOrderItemMapper;
 import top.atluofu.model.LoginUser;
+import top.atluofu.model.OrderMessage;
 import top.atluofu.model.ProductOrderDO;
 import top.atluofu.mapper.ProductOrderMapper;
 import top.atluofu.model.ProductOrderItemDO;
@@ -65,6 +69,13 @@ public class ProductOrderServiceImpl extends ServiceImpl<ProductOrderMapper, Pro
 
     @Autowired
     private ProductOrderItemMapper orderItemMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private RabbitMQConfig rabbitMQConfig;
+
 
     /**
      * * 防重提交
@@ -123,7 +134,11 @@ public class ProductOrderServiceImpl extends ServiceImpl<ProductOrderMapper, Pro
         //创建订单项
         this.saveProductOrderItems(orderOutTradeNo, productOrderDO.getId(), orderItemList);
 
-        //发送延迟消息，用于自动关单 TODO
+        //发送延迟消息，用于自动关单
+        OrderMessage orderMessage = new OrderMessage();
+        orderMessage.setOutTradeNo(orderOutTradeNo);
+        rabbitTemplate.convertAndSend(rabbitMQConfig.getEventExchange(),rabbitMQConfig.getOrderCloseDelayRoutingKey(),orderMessage);
+
 
 
         //创建支付  TODO
@@ -385,6 +400,51 @@ public class ProductOrderServiceImpl extends ServiceImpl<ProductOrderMapper, Pro
             return "";
         } else {
             return productOrderDO.getState();
+        }
+
+    }
+
+
+    /**
+     * 定时关单
+     *
+     * @param orderMessage
+     * @return
+     */
+    @Override
+    public boolean closeProductOrder(OrderMessage orderMessage) {
+
+        ProductOrderDO productOrderDO = productOrderMapper
+                .selectOne(new QueryWrapper<ProductOrderDO>().eq("out_trade_no", orderMessage.getOutTradeNo()));
+
+        if (productOrderDO == null) {
+            // 订单不存在
+            log.warn("直接确认消息，订单不存在:{}", orderMessage);
+            return true;
+        }
+
+        if (productOrderDO.getState().equalsIgnoreCase(ProductOrderStateEnum.PAY.name())) {
+            // 已经支付
+            log.info("直接确认消息,订单已经支付:{}", orderMessage);
+            return true;
+        }
+
+        // 向第三方支付查询订单是否真的未支付 TODO
+
+        String payResult = "";
+
+        // 结果为空，则未支付成功，本地取消订单
+        if (StringUtils.isBlank(payResult)) {
+            productOrderMapper.updateOrderPayState(productOrderDO.getOutTradeNo(), ProductOrderStateEnum.CANCEL.name(),
+                    ProductOrderStateEnum.NEW.name());
+            log.info("结果为空，则未支付成功，本地取消订单:{}", orderMessage);
+            return true;
+        } else {
+            // 支付成功，主动的把订单状态改成UI就支付，造成该原因的情况可能是支付通道回调有问题
+            log.warn("支付成功，主动的把订单状态改成UI就支付，造成该原因的情况可能是支付通道回调有问题:{}", orderMessage);
+            productOrderMapper.updateOrderPayState(productOrderDO.getOutTradeNo(), ProductOrderStateEnum.PAY.name(),
+                    ProductOrderStateEnum.NEW.name());
+            return true;
         }
 
     }
