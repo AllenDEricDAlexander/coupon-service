@@ -1,7 +1,10 @@
 package top.atluofu.service;
 
 import top.atluofu.req.CartItemReq;
+import top.atluofu.vo.CartItemVO;
 import top.atluofu.vo.CartVO;
+
+import java.util.List;
 
 /**
  * @ClassName: CartService
@@ -20,4 +23,6 @@ public interface CartService {
     void deleteItem(long id);
 
     void change(CartItemReq cartItemReq);
+
+    List<CartItemVO> confirmOrderCartItems(List<Long> productIdList);
 }
