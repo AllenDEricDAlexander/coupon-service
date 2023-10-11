@@ -66,4 +66,4 @@ alipay:
   success_return_url: https://atluofu.top
 
   #支付宝通知回调接口
-  callback_url: https://atluofu.top
+  callback_url: https://atluofu.ngrok2.xiaomiqiu.cn/api/callback/order/v1/alipay

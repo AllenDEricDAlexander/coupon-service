@@ -1,10 +1,13 @@
 package top.atluofu.service;
 
+import top.atluofu.enums.ProductOrderPayTypeEnum;
 import top.atluofu.model.OrderMessage;
 import top.atluofu.model.ProductOrderDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.atluofu.request.ConfirmOrderRequest;
 import top.atluofu.utils.JsonData;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -21,4 +24,6 @@ public interface ProductOrderService extends IService<ProductOrderDO> {
     String queryProductOrderState(String outTradeNo);
 
     boolean closeProductOrder(OrderMessage orderMessage);
+
+    JsonData handlerOrderCallbackMsg(ProductOrderPayTypeEnum productOrderPayTypeEnum, Map<String, String> paramsMap);
 }
